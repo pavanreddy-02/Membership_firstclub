@@ -21,7 +21,7 @@ App URL: `http://localhost:8080`
 URL: `http://localhost:8080/h2-console`  
 JDBC: `jdbc:h2:mem:membershipdb`  
 Username: `sa`  
-Password: `password`
+Password: 
 
 ---
 
