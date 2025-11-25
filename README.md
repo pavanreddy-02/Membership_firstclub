@@ -1,105 +1,136 @@
-# FirstClub Membership System 🚀
+# FirstClub Membership System
 
-A robust and scalable backend system built with **Spring Boot 3.3.5** that manages subscription-based memberships, tier progression, and a sophisticated reward logic engine for an e-commerce platform.
-
----
-
-## ✨ Features
-
-- **Membership Management**: View, subscribe, upgrade/downgrade, and cancel membership plans.
-- **Multi-Tier System**: Users progress through Bronze, Silver, Gold, and Platinum tiers.
-- **Smart Reward Logic**: Earn points from purchases, first orders, referrals, and order frequency.
-- **Automated Point Decay**: Points diminish after periods of inactivity to encourage engagement.
-- **Tier Progression**: Automatic tier upgrades (and downgrades) based on a user's current points and subscription status.
-- **RESTful API**: A clean, well-defined API for easy integration with front-end clients.
+A Spring Boot backend providing subscription membership, reward points, tier benefits, and automatic upgrades. Built using Java 17, Spring Boot 3.3.5, and H2 in-memory DB.
 
 ---
 
-## 🧠 Core Logic & Rules
+## How to Run
 
-### Membership Plans & Tiers
-| Plan Type  | Description                      |
-|------------|----------------------------------|
-| **Monthly**  | 30-day subscription cycle        |
-| **Quarterly**| 90-day subscription cycle        |
-| **Yearly**   | 365-day subscription cycle       |
-
-### Tier Benefits & Requirements
-| Tier      | Points Range | Benefits                                                                 |
-|-----------|--------------|--------------------------------------------------------------------------|
-| **Bronze**  | 0 – 9999       | No perks                                                                 |
-| **Silver**  | 10000 – 29999    | Free delivery on orders > Rs.50, +5% discount on all orders               |
-| **Gold**    | 30000 – 49999    | Free delivery on all orders, 10% discount, early access to sales        |
-| **Platinum**| 50000+         | All Gold perks + premium access to exclusive products and events        |
-
-### Key Behaviors
-- **Tier Source of Truth**: A user's displayed tier is the higher of their subscription-paid tier or their points-earned tier.
-- **Points Decay**: Users lose **500 points per day** after 1 days of inactivity (processed via a daily scheduler).
-- **Subscription Expiry**: Membership and its associated paid tier benefits end automatically when the plan duration is over.
-
----
-
-## 🛠️ Tech Stack
-
-| Component       | Technology                           |
-|-----------------|--------------------------------------|
-| **Backend Framework** | Spring Boot 3.3.5                   |
-| **Language**    | Java 17                              |
-| **Database**    | H2 In-Memory Database                |
-| **Build Tool**  | Maven                                |
-| **API Style**   | REST                                 |
-
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Java 17 JDK or later
-- Maven 3.3.5 (or use the embedded Maven wrapper)
-
-### 1. Clone the Repository
 ```bash
 git clone https://github.com/pavanreddy-02/Membership_firstclub.git
 cd Membership_firstclub
-
-### 2️⃣ Start Application
 mvn spring-boot:run
+```
 
-Application runs on: **http://localhost:8080**
+App URL: `http://localhost:8080`
 
 ---
 
-## 🗄️ H2 Console (In-Memory DB)
+## H2 Console
 
-URL: http://localhost:8080/h2-console  
-JDBC URL: `jdbc:h2:mem:membershipdb`  
+URL: `http://localhost:8080/h2-console`  
+JDBC: `jdbc:h2:mem:membershipdb`  
 Username: `sa`  
 Password: `password`
 
 ---
 
-## 📡 API Endpoints
+## Membership Rules
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/membership/plans` | Fetch all available membership plan + tier pricing |
-| POST | `/api/membership/subscribe` | Subscribe a user to a plan + tier |
-| GET | `/api/membership?userId=xxx` | Get the current membership status |
-| PUT | `/api/membership/upgrade?userId=xxx&tier=GOLD` | Upgrade tier |
-| PUT | `/api/membership/downgrade?userId=xxx&tier=SILVER` | Downgrade tier |
-| DELETE | `/api/membership/cancel?userId=xxx` | Cancel active membership |
-| POST | `/api/membership/order` | Record an order and apply points |
+### Plans Available
+- Monthly
+- Quarterly
+- Yearly
+
+Each can be purchased with tiers: Silver, Gold, Platinum.
+
+### Tiers (Based on Points)
+
+| Tier | Range | Benefits |
+|------|-------|----------|
+| Bronze | 0–99 | No perks |
+| Silver | 100–299 | 5% discount, conditional free delivery |
+| Gold | 300–499 | 10% discount, faster delivery, early access |
+| Platinum | 500+ | 15% discount, free delivery all, priority support |
+
+### Tier Behavior Logic
+
+- All users start at **Bronze**
+- Subscription locks the **paid tier as minimum**
+- Tier can increase if points exceed thresholds
+- After expiry → reverts to points-based tier
+- Points never go below 0
+
+### Points System
+
+| Action | Points |
+|--------|--------|
+| ₹1 spent | 1 point (scaled x100 internally) |
+| Each order | +500 |
+| First order bonus | +5000 |
+| Referral bonus | +10000 |
+| Inactivity | -500/day after 2nd day |
 
 ---
 
-## 🧪 API Request Examples
+## API Routes
 
-### ➤ Subscribe
-POST `/api/membership/subscribe`
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/api/membership/plans` | Get available plans with tier pricing |
+| POST | `/api/membership/subscribe` | Subscribe user |
+| GET | `/api/membership?userId={id}` | Check membership status |
+| PUT | `/api/membership/upgrade` | Upgrade tier |
+| PUT | `/api/membership/downgrade` | Downgrade tier |
+| DELETE | `/api/membership/cancel` | Cancel membership |
+| POST | `/api/membership/order` | Record purchase + add points |
+
+---
+
+## Example Requests
+
+### Subscribe
+
 ```json
 {
-  "userId": "customer123",
+  "userId": "pavan",
   "planType": "MONTHLY",
   "tier": "GOLD"
 }
+```
+
+### Record Order
+
+```json
+{
+  "userId": "pavan",
+  "amount": 1500
+}
+```
+
+---
+
+## Project Structure
+
+```
+src/main/java/com.firstclub.membership/
+│── controller/
+│── service/
+│── service/impl/
+│── repository/
+│── model/
+│── dto/
+└── config/
+```
+
+---
+
+## Tech Stack
+
+- Java 17
+- Spring Boot 3.3.5
+- H2 Database
+- JPA/Hibernate
+
+---
+
+## Future Enhancements
+
+- Swagger Documentation
+- Redis caching
+- Notifications
+- Admin UI for pricing config
+
+---
+
+Status: Ready for demo & extension.
