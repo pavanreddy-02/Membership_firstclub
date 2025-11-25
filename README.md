@@ -63,84 +63,43 @@ A robust and scalable backend system built with **Spring Boot 3.3.5** that manag
 git clone https://github.com/pavanreddy-02/Membership_firstclub.git
 cd Membership_firstclub
 
-2. Run the Application
-You can run the application using the Maven Spring Boot plugin:
-   Copied mvn spring-boot:run The application will start on http://localhost:8080.
-3. Access the H2 Database Console
-The H2 in-memory database console is available for inspection:
+### 2️⃣ Start Application
+mvn spring-boot:run
 
-URL: http://localhost:8080/h2-console
-JDBC URL: jdbc:h2:mem:membershipdb
-Username: sa
-Password: password
+Application runs on: **http://localhost:8080**
 
-Ensure the JDBC URL matches exactly what is configured in your application.properties.
+---
 
-📡 API Endpoints
+## 🗄️ H2 Console (In-Memory DB)
 
+URL: http://localhost:8080/h2-console  
+JDBC URL: `jdbc:h2:mem:membershipdb`  
+Username: `sa`  
+Password: `password`
 
+---
 
-Method
-Endpoint
-Description
+## 📡 API Endpoints
 
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/membership/plans` | Fetch all available membership plan + tier pricing |
+| POST | `/api/membership/subscribe` | Subscribe a user to a plan + tier |
+| GET | `/api/membership?userId=xxx` | Get the current membership status |
+| PUT | `/api/membership/upgrade?userId=xxx&tier=GOLD` | Upgrade tier |
+| PUT | `/api/membership/downgrade?userId=xxx&tier=SILVER` | Downgrade tier |
+| DELETE | `/api/membership/cancel?userId=xxx` | Cancel active membership |
+| POST | `/api/membership/order` | Record an order and apply points |
 
+---
 
-GET
-/api/membership/plans
-Fetch all available membership plans.
+## 🧪 API Request Examples
 
-
-POST
-/api/membership/subscribe
-Subscribe a user to a membership plan.
-
-
-GET
-/api/membership?userId={userId}
-Get the current membership state for a user.
-
-
-PUT
-/api/membership/upgrade
-Upgrade a user's subscription tier.
-
-
-PUT
-/api/membership/downgrade
-Downgrade a user's subscription tier.
-
-
-DELETE
-/api/membership/cancel
-Cancel a user's active subscription.
-
-
-POST
-/api/membership/order
-Record an order and process reward points.
-
-
-
-🧪 API Usage Examples
-Subscribe to a Membership Plan
-POST /api/membership/subscribe
-   Copied {
+### ➤ Subscribe
+POST `/api/membership/subscribe`
+```json
+{
   "userId": "customer123",
   "planType": "MONTHLY",
   "tier": "GOLD"
-} Record an Order and Earn Points
-POST /api/membership/order
-   Copied {
-  "userId": "customer123",
-  "amount": 1500.00
-} 
-📂 Project Structure
-   Copied src/main/java/com.firstclub.membership/
-├── controller/        # REST API endpoints
-├── service/           # Service layer interfaces
-├── service/impl/      # Service layer implementations
-├── model/             # JPA entities (User, Membership, Plan, etc.)
-├── repository/        # Spring Data JPA repositories
-├── dto/               # Data Transfer Objects for requests/responses
-└── config/            # Application configuration (e.g., SchedulerConfig)
+}
