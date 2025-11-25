@@ -38,10 +38,10 @@ Each can be purchased with tiers: Silver, Gold, Platinum.
 
 | Tier | Range | Benefits |
 |------|-------|----------|
-| Bronze | 0–99 | No perks |
-| Silver | 100–299 | 5% discount, conditional free delivery |
-| Gold | 300–499 | 10% discount, faster delivery, early access |
-| Platinum | 500+ | 15% discount, free delivery all, priority support |
+| Bronze | 0–9999 | No perks |
+| Silver | 10000–29999 | 5% discount, conditional free delivery |
+| Gold | 30000–49999 | 10% discount, faster delivery, early access |
+| Platinum | 50000+ | 15% discount, free delivery all, priority support |
 
 ### Tier Behavior Logic
 
@@ -55,11 +55,11 @@ Each can be purchased with tiers: Silver, Gold, Platinum.
 
 | Action | Points |
 |--------|--------|
-| ₹1 spent | 1 point (scaled x100 internally) |
+| ₹1 spent | 1 point |
 | Each order | +500 |
 | First order bonus | +5000 |
 | Referral bonus | +10000 |
-| Inactivity | -500/day after 2nd day |
+| Inactivity | -500/day after day of inactivity |
 
 ---
 
@@ -127,8 +127,6 @@ src/main/java/com.firstclub.membership/
 ## Future Enhancements
 
 - Swagger Documentation
-- Redis caching
-- Notifications
 - Admin UI for pricing config
 
 ---
